@@ -1,4 +1,71 @@
 $(document).ready(function() {
+    var width = 550;
+    var height = 550;
+    var svg = null;
+    var fill = null;
+    var innerRadius = null;
+    var outerRadius = null;
+    
+    initialize();
+
+    function initialize() {
+        createSvg();
+        createChordDiagram();
+        setChordDiagramData(matrix, labels);
+
+
+
+    //write all arcs/paths/groups/etc
+    //add onclick button method that triggers data transition
+
+        console.log("test")
+
+    }
+
+    //create svg item
+    function createSvg() {
+        svg = d3.select("#chart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform","translate(" + width / 2 + "," + height / 2 + ")");
+    }
+
+    // create chord diagram
+    function createChordDiagram() {
+        var range5 = ["#7FCAFF", "#7F97FF", "#A77FFF", "#E77FFF", "#FF9C7E", "#FFBD7E", "#FFD77E", "#CAF562","#62F5C8", "#7FCAFF"];
+        fill = d3.scale.ordinal()
+                     .domain(d3.range(range5.length)).range(range5);
+        innerRadius = Math.min(width, height) * .41;
+        outerRadius = innerRadius * 1.05;
+    }
+
+    function getFormattedData(data) {
+        data.forEach(function(data1){
+            if (data1.Exit != "") {
+                RM.push(+data1.RM);
+                BK.push(+data1.BK);
+                TT.push(+data1.TT);
+                SL.push(+data1.SL);
+                FM.push(+data1.FM);
+                OW.push(+data1.OW);
+                EM.push(+data1.EM);
+                XX.push(+data1.XX);
+                BP.push(+data1.BP);
+                DC.push(+data1.DC);
+                MB.push(+data1.MB); 
+                exits.push(data1.Exit);
+            };  
+        });
+        master_matrix.push(RM, BK, TT, SL, FM, OW, EM, XX, BP, DC, MB);
+    }
+
+    // set data for chord diagram
+    function setChordDiagramData(matrix, labels) {
+
+    }
+
 
         var tests = [];
         var RM = [];
@@ -18,53 +85,17 @@ $(document).ready(function() {
             
         var w = window;
 
-        var width = 550;
-        var height = 550;
-                var svg = d3.select("#chart")
-                     .append("svg")
-                     .attr("width", width)
-                     .attr("height", height)
-                     .append("g")
-                     .attr("transform","translate(" + width / 2 + "," + height / 2 + ")");
 
-                var range5 = ["#7FCAFF", "#7F97FF", "#A77FFF", "#E77FFF", "#FF9C7E", "#FFBD7E", "#FFD77E", "#CAF562","#62F5C8", "#7FCAFF"];
-                var fill = d3.scale.ordinal()
-                            .domain(d3.range(range5.length)).range(range5);
-                var innerRadius = Math.min(width, height) * .41;
-                var outerRadius = innerRadius * 1.05;
-
+                
         d3.csv("_data/jan12-limited.csv", function (data){
-                data.forEach(function(data1){
-                    if (data1.Exit != "") {
-                    RM.push(+data1.RM);
-                    BK.push(+data1.BK);
-                    TT.push(+data1.TT);
-                    SL.push(+data1.SL);
-                    FM.push(+data1.FM);
-                    OW.push(+data1.OW);
-                    EM.push(+data1.EM);
-                    XX.push(+data1.XX);
-                    BP.push(+data1.BP);
-                    DC.push(+data1.DC);
-                    MB.push(+data1.MB); 
-                    exits.push(data1.Exit);
-                    };  
-                });
-                master_matrix.push(RM, BK, TT, SL, FM, OW, EM, XX, BP, DC, MB);
-                //console.log("Inside ",master_matrix);
-                function_loadmatrix(master_matrix, exits);
+            getFormattedData(data);
 
-                data.forEach(function(data2,i){
+            function_loadmatrix(master_matrix, exits);
 
-                    var station = exits[i];
-                    //console.log(exits[i]);
-                    //console.log(data2);
-                    
-                    //console.log(data2[station]);
-                    //var value = data2[station];
-                    //w[station].push(value); 
-                    //console.log(w[EP]);   
-        //          console.log(data2); 
+            data.forEach(function(data2,i){
+
+            var station = exits[i];
+                     
                 });
                 
         });
