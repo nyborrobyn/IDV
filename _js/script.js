@@ -11,9 +11,6 @@ $(document).ready(function() {
     function initialize() {
         createSvg();
         createChordDiagram();
-        setChordDiagramData(matrix, labels);
-
-
 
     //write all arcs/paths/groups/etc
     //add onclick button method that triggers data transition
@@ -62,10 +59,94 @@ $(document).ready(function() {
     }
 
     // set data for chord diagram
-    function setChordDiagramData(matrix, labels) {
+    function setChordDiagramData(m_matrix, labels){
+        new_matrix = m_matrix;
+        var chord = d3.layout.chord()
+               .padding(.05)
+               .sortSubgroups(d3.descending)
+               .matrix(m_matrix);
 
-    }
+        svg.append("g")
+               .selectAll("path")
+               .data(chord.groups)
+               .enter()
+               .append("path")
+               .style("fill", function(d) {
+                    return fill(d.index);
+               })
+               .style("stroke", function(d) {
+                    return fill(d.index);
+               })
+              .attr("d", d3.svg.arc()
+                   .innerRadius(innerRadius)
+                   .outerRadius(outerRadius))
+                   .on("mouseover", fade(.1))
+                   .on("mouseout", fade(0.5));
 
+        // Create/update "group" elements 
+        var groupG = svg.selectAll("svg.group")
+            .data(chord.groups(), function (d) {
+                return d.index; 
+                //use a key function in case the 
+                //groups are sorted differently between updates
+            });
+
+        var newGroups = groupG.enter().append("g")
+            .attr("class", "group");
+
+        //create the group labels
+        newGroups.append("svg:text")
+                .attr("xlink:href", function (d) {
+                    return "#group" + d.index;
+                })
+                .attr("dy", ".35em")
+                .attr("color", "#fff")
+                .text(function (d) {
+                     return labels[d.index];
+                });
+
+        //position group labels to match layout
+        groupG.select("text")
+            .transition()
+            .duration(1500)
+            .attr("transform", function(d) {
+                d.angle = (d.startAngle + d.endAngle) / 2;
+                //store the midpoint angle in the data object
+
+                return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")" +
+                " translate(" + (innerRadius + 26) + ")" + 
+                (d.angle > Math.PI ? " rotate(180)" : " rotate(0)"); 
+                //include the rotate zero so that transforms can be interpolated
+            })
+            .attr("text-anchor", function (d) {
+                return d.angle > Math.PI ? "end" : "begin";
+            });
+    
+
+            svg.append("g")
+                .attr("class", "chord")
+                .selectAll("path")
+                .data(chord.chords)
+                .enter().append("path")
+                .style("fill", function(d) {
+                    return fill(d.target.index);
+                })
+                .attr("d", d3.svg.chord().radius(innerRadius))
+                .style("opacity", 0.5);
+
+            function fade(opacity) {
+                return function(g, i) {
+                    svg
+                    .selectAll("g.chord path")
+                    .filter(function(d) {
+                        return d.source.index != i && d.target.index != i;
+                    })
+                    .transition()
+                    .style("opacity", opacity);
+                };
+            };
+            setupButton()
+        };
 
         var tests = [];
         var RM = [];
@@ -90,7 +171,7 @@ $(document).ready(function() {
         d3.csv("_data/jan12-limited.csv", function (data){
             getFormattedData(data);
 
-            function_loadmatrix(master_matrix, exits);
+            setChordDiagramData(master_matrix, exits);
 
             data.forEach(function(data2,i){
 
@@ -100,101 +181,13 @@ $(document).ready(function() {
                 
         });
 
-        function function_loadmatrix(m_matrix, labels){
-            new_matrix = m_matrix;
-            //console.log("m_matrix", m_matrix);
-                var chord = d3.layout.chord()
-                       .padding(.05)
-                       .sortSubgroups(d3.descending)
-                       .matrix(m_matrix);
 
-                svg.append("g")
-                       .selectAll("path")
-                       .data(chord.groups)
-                       .enter().append("path")
-                       .style("fill", function(d) {
-                            return fill(d.index);
-                       })
-                       .style("stroke", function(d) {
-                            return fill(d.index);
-                       })
-                      .attr("d", d3.svg.arc()
-                           .innerRadius(innerRadius)
-                           .outerRadius(outerRadius))
-                           .on("mouseover", fade(.1))
-                           .on("mouseout", fade(0.5));
-
-/* Create/update "group" elements */
-                        var groupG = svg.selectAll("svg.group")
-                            .data(chord.groups(), function (d) {
-                                return d.index; 
-                                //use a key function in case the 
-                                //groups are sorted differently between updates
-                            });
-
-                        var newGroups = groupG.enter().append("g")
-                            .attr("class", "group");
-
-                    //create the group labels
-                        newGroups.append("svg:text")
-                        .attr("xlink:href", function (d) {
-                                return "#group" + d.index;
-                            })
-                        .attr("dy", ".35em")
-                        .attr("color", "#fff")
-                        .text(function (d) {
-                                 return labels[d.index];
-                        });
-
-                    //position group labels to match layout
-                        groupG.select("text")
-                        .transition()
-                        .duration(1500)
-                        .attr("transform", function(d) {
-                        d.angle = (d.startAngle + d.endAngle) / 2;
-                    //store the midpoint angle in the data object
-                
-                        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")" +
-                            " translate(" + (innerRadius + 26) + ")" + 
-                            (d.angle > Math.PI ? " rotate(180)" : " rotate(0)"); 
-                    //include the rotate zero so that transforms can be interpolated
-                            })
-                        .attr("text-anchor", function (d) {
-                            return d.angle > Math.PI ? "end" : "begin";
-                        });
-    
-
-                svg.append("g")
-                    .attr("class", "chord")
-                    .selectAll("path")
-                    .data(chord.chords)
-                    .enter().append("path")
-                    .style("fill", function(d) {
-                        return fill(d.target.index);
-                    })
-                    .attr("d", d3.svg.chord().radius(innerRadius))
-                    .style("opacity", 0.5);
-
-                    //console.log(chord);   
-             function fade(opacity) {
-                    return function(g, i) {
-                        svg.selectAll("g.chord path")
-                        .filter(function(d) {
-                        return d.source.index != i && d.target.index != i;
-                        })
-                        .transition()
-                        .style("opacity", opacity);
-    };
-};
+        function setupButton() {
             var button = d3.select("#chord-transition-button")
             button.on("click", changeChord)
-            
-
 
             function changeChord() {
                 console.log("blah");
             }
-
-        };
-
+        }
         });
