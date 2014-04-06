@@ -5,7 +5,13 @@
       <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     </head>
     <body>
-    	<div id="chart"></div>
+    	
+        <div id="chart"></div>
+        <div id="control">
+            <form>
+                <input id="chord-transition-button" type="button" value="Change that Shit"/>
+            </form>
+        </div>
     	<script type="text/javascript">
     	var tests = [];
        	var RM = [];
@@ -58,7 +64,7 @@
     				}; 	
 				});
     			master_matrix.push(RM, BK, TT, SL, FM, OW, EM, XX, BP, DC, MB);
-    			console.log("Inside ",master_matrix);
+    			//console.log("Inside ",master_matrix);
     			function_loadmatrix(master_matrix);
 
 				data.forEach(function(data2,i){
@@ -78,7 +84,7 @@
 
     	function function_loadmatrix(m_matrix){
     		new_matrix = m_matrix;
-    		console.log("m_matrix", m_matrix);
+    		//console.log("m_matrix", m_matrix);
                 var chord = d3.layout.chord()
                        .padding(.05)
                        .sortSubgroups(d3.descending)
@@ -111,7 +117,7 @@
                     .attr("d", d3.svg.chord().radius(innerRadius))
                     .style("opacity", 0.5);
 
-                    console.log(chord);	
+                    //console.log(chord);	
              function fade(opacity) {
                     return function(g, i) {
                         svg.selectAll("g.chord path")
@@ -122,16 +128,18 @@
                         .style("opacity", opacity);
     };
 };
+            var button = d3.select("#chord-transition-button")
+            button.on("click", changeChord)
+            
+
+
+            function changeChord() {
+                console.log("blah");
+            }
 
     	};
 
 
-                //console.log("Master matrix out of the loop", new_matrix);
-    			//console.log(sample);
-
                 
-
-
-            // Your beautiful D3 code will go here
         </script>    
     </body>
