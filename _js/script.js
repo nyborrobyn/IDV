@@ -52,7 +52,7 @@ $(document).ready(function() {
                 });
                 master_matrix.push(RM, BK, TT, SL, FM, OW, EM, XX, BP, DC, MB);
                 //console.log("Inside ",master_matrix);
-                function_loadmatrix(master_matrix);
+                function_loadmatrix(master_matrix, exits);
 
                 data.forEach(function(data2,i){
 
@@ -69,7 +69,7 @@ $(document).ready(function() {
                 
         });
 
-        function function_loadmatrix(m_matrix){
+        function function_loadmatrix(m_matrix, labels){
             new_matrix = m_matrix;
             //console.log("m_matrix", m_matrix);
                 var chord = d3.layout.chord()
@@ -91,7 +91,47 @@ $(document).ready(function() {
                            .innerRadius(innerRadius)
                            .outerRadius(outerRadius))
                            .on("mouseover", fade(.1))
-                           .on("mouseout", fade(1));
+                           .on("mouseout", fade(0.5));
+
+/* Create/update "group" elements */
+                        var groupG = svg.selectAll("svg.group")
+                            .data(chord.groups(), function (d) {
+                                return d.index; 
+                                //use a key function in case the 
+                                //groups are sorted differently between updates
+                            });
+
+                        var newGroups = groupG.enter().append("g")
+                            .attr("class", "group");
+
+                    //create the group labels
+                        newGroups.append("svg:text")
+                        .attr("xlink:href", function (d) {
+                                return "#group" + d.index;
+                            })
+                        .attr("dy", ".35em")
+                        .attr("color", "#fff")
+                        .text(function (d) {
+                                 return labels[d.index];
+                        });
+
+                    //position group labels to match layout
+                        groupG.select("text")
+                        .transition()
+                        .duration(1500)
+                        .attr("transform", function(d) {
+                        d.angle = (d.startAngle + d.endAngle) / 2;
+                    //store the midpoint angle in the data object
+                
+                        return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")" +
+                            " translate(" + (innerRadius + 26) + ")" + 
+                            (d.angle > Math.PI ? " rotate(180)" : " rotate(0)"); 
+                    //include the rotate zero so that transforms can be interpolated
+                            })
+                        .attr("text-anchor", function (d) {
+                            return d.angle > Math.PI ? "end" : "begin";
+                        });
+    
 
                 svg.append("g")
                     .attr("class", "chord")
