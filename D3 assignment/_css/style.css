@@ -9,12 +9,14 @@
 @import url(http://fonts.googleapis.com/css?family=Exo+2:400, 200, 200italic);
 
             body {
-                background: #FFF;
-                
+                background: #FFF;                
                 width: 100%;
                 font-family:'Exo 2', sans-serif;
             }
 
+            h1{
+                text-align: center;
+            }
             #chart_placeholder {
                 text-align: center;
                 margin: 20px 20px 20px 0px;
@@ -22,6 +24,18 @@
                 position: absolute;
                 height: 100%;
                 width: 900px;
+            }
+
+            #Bar_label{
+                width: 650px;
+                text-align: center;
+                float: left;
+            }
+
+            #Chord_label{
+                width: 650px;
+                text-align: center;
+                float: left;
             }
 
             #bar_chart{
@@ -59,7 +73,7 @@
                 text-decoration: none;
                 color: #999;
             }
-            
+
 
             text {
                 font-size: 13px;
