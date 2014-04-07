@@ -5,18 +5,27 @@ $(document).ready(function() {
     var fill = null;
     var innerRadius = null;
     var outerRadius = null;
+    var master_matrix = null;
+    var exits = null;
     
     initialize();
 
     function initialize() {
         createSvg();
         createChordDiagram();
+        setupButton();
 
-    //write all arcs/paths/groups/etc
+        d3.csv("_data/jan12-limited.csv", function (data) {
+            getFormattedData(data);
+            setChordDiagramData(master_matrix, exits);
+
+            data.forEach(function(data2,i) {
+                var station = exits[i];
+            });    
+        });
+
     //add onclick button method that triggers data transition
-
-        console.log("test")
-
+    // make init function update data
     }
 
     //create svg item
@@ -39,6 +48,22 @@ $(document).ready(function() {
     }
 
     function getFormattedData(data) {
+        var tests = [];
+        var RM = [];
+        var BK = [];
+        var TT = [];
+        var SL = [];
+        var FM = [];  
+        var OW = [];
+        var EM = [];    
+        var XX = [];
+        var BP = [];
+        var DC = [];
+        var MB = [];
+        master_matrix = [];
+        var new_matrix = [];        
+        exits = [];
+
         data.forEach(function(data1){
             if (data1.Exit != "") {
                 RM.push(+data1.RM);
@@ -145,41 +170,16 @@ $(document).ready(function() {
                     .style("opacity", opacity);
                 };
             };
-            setupButton()
+            
         };
 
-        var tests = [];
-        var RM = [];
-        var BK = [];
-        var TT = [];
-        var SL = [];
-        var FM = [];  
-        var OW = [];
-        var EM = [];    
-        var XX = [];
-        var BP = [];
-        var DC = [];
-        var MB = [];
-        var master_matrix = [];
-        var new_matrix = [];        
-        var exits = [];
+        
             
         var w = window;
 
 
                 
-        d3.csv("_data/jan12-limited.csv", function (data){
-            getFormattedData(data);
-
-            setChordDiagramData(master_matrix, exits);
-
-            data.forEach(function(data2,i){
-
-            var station = exits[i];
-                     
-                });
-                
-        });
+        
 
 
         function setupButton() {
