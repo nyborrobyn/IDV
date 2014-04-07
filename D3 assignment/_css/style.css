@@ -1,0 +1,65 @@
+/* ---------------------------------------------------------------------------------------------------- */
+/* RESET CSS */
+
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+@import url(http://fonts.googleapis.com/css?family=Exo+2:400, 200, 200italic);
+
+            body {
+                background: #FFF;
+                color: #333;
+                width: 100%;
+                font-family:'Exo 2', sans-serif;
+            }
+
+            #chart_placeholder {
+                text-align: center;
+                margin: 20px 20px 20px 0px;
+                color:#fff;
+                position: absolute;
+                height: 100%;
+                width: 900px;
+                right: 100px ; 
+            }
+
+            .labeltext {
+                color: #232;
+            }
+            #circle circle {
+                fill: none;
+                pointer-events: all;
+            }
+
+            path.chord {
+                transition: opacity 0.3s;
+            }
+
+            #circle:hover path.fade {
+                opacity: 0;
+            }
+            a {
+                text-decoration: none;
+                color: #999;
+            }
+
+
+            text {
+                font-size: 2em;
+                fill: #000;
+            }
+            svg {
+                font-size: 10px;
+                color: #999;
+                font-family:'Exo 2', sans-serif;
+                min-height: 100%;
+                min-width: 100%;
+            }
+
+            button:disabled {
+                color:red;
+                background-color: lightyellow;
+            }
+            }
