@@ -10,7 +10,7 @@
 
             body {
                 background: #FFF;
-                color: #333;
+                
                 width: 100%;
                 font-family:'Exo 2', sans-serif;
             }
@@ -22,9 +22,24 @@
                 position: absolute;
                 height: 100%;
                 width: 900px;
-                right: 100px ; 
             }
 
+            #bar_chart{
+             text-align: center;
+             margin: 20px 20px 20px 0px;
+                color:#fff;
+                float: right;
+                
+            }
+
+            #label{
+                     text-align: center;
+             margin: 20px 20px 20px 0px;
+                color:#fff;
+                float: right;
+                
+            }
+            }
             .labeltext {
                 color: #232;
             }
@@ -44,14 +59,14 @@
                 text-decoration: none;
                 color: #999;
             }
-
+            
 
             text {
-                font-size: 2em;
+                font-size: 13px;
                 fill: #000;
             }
             svg {
-                font-size: 10px;
+                font-size: 9px;
                 color: #999;
                 font-family:'Exo 2', sans-serif;
                 min-height: 100%;

@@ -1,10 +1,10 @@
 $(document).ready(function() {
     
 /*** Define parameters and tools ***/
-var width = 800,
-    height = 800,
+var width = 650,
+    height = 650,
     outerRadius = Math.min(width, height) / 2 - 100,
-    innerRadius = outerRadius - 18;
+    innerRadius = outerRadius - 10;
 
 var dataset = "jan06.csv";
 //string url for the initial data set
@@ -58,8 +58,6 @@ g.append("circle")
 //this circle is set in CSS to be transparent but to respond to mouse events
 //It will ensure that the <g> responds to all mouse events within
 //the area, even after chords are faded out.
-
-
 load_csv( "_data/jan06.csv" );
 
 function load_csv (filepath) {
@@ -95,11 +93,13 @@ function load_csv (filepath) {
                  //   BP.push(+data1.BP);
                     DC.push(+data1.DC);
                     MB.push(+data1.MB); 
-                    exits.push(data1.Exit);
+                 //   exits.push(data1.Exit);
                     };  
                 });
                 //master_matrix.push(RM, BK, TT, SL, FM, OW, EM, XX, BP, DC, MB);
                 master_matrix.push(RM, BK, TT, SL, FM, OW, EM, XX, DC, MB);
+                exits = ["Richmond", "Downtown Berkeley", "12th street oakland", "San Leandro", "Fremont", "West Oakland", "Embarcadero", "16th street mission", "Daly City"
+, "Millbrae"];
                 updateChords(master_matrix, exits);
         });
     
@@ -107,6 +107,198 @@ function load_csv (filepath) {
 };
 
 
+// BAR CHART //////////////
+
+
+            //Width and height
+            var w = 500;
+            var h = 100;
+            var barPadding = 1;
+            
+            var dataset2 = [ 8, 16, 17, 19 ,20, 20 ];
+            var tT = [
+              {"level": "0-25k", "percent": 22},
+              {"level": "25-50k", "percent": 23},
+              {"level": "50-75k", "percent": 16},
+              {"level": "75-100k", "percent": 14},
+              {"level": "100-150k", "percent": 13},
+              {"level": "150k+", "percent": 12},
+
+            ];
+
+            var xX = [
+              {"level": "0-25k", "percent": 15},
+              {"level": "25-50k", "percent": 15},
+              {"level": "50-75k", "percent": 18},
+              {"level": "75-100k", "percent": 15},
+              {"level": "100-150k", "percent": 19},
+              {"level": "150k+", "percent": 18},
+            ];
+
+            var dC = [
+              {"level": "0-25k", "percent": 10},
+              {"level": "25-50k", "percent": 15},
+              {"level": "50-75k", "percent": 19},
+              {"level": "75-100k", "percent": 17},
+              {"level": "100-150k", "percent": 21},
+              {"level": "150k+", "percent": 18},
+            ];
+
+            var bK = [
+              {"level": "0-25k", "percent": 24},
+              {"level": "25-50k", "percent": 21},
+              {"level": "50-75k", "percent": 16},
+              {"level": "75-100k", "percent": 12},
+              {"level": "100-150k", "percent": 14},
+              {"level": "150k+", "percent": 12},
+            ];
+
+            var eM = [
+              {"level": "0-25k", "percent": 8},
+              {"level": "25-50k", "percent": 16},
+              {"level": "50-75k", "percent": 17},
+              {"level": "75-100k", "percent": 19},
+              {"level": "100-150k", "percent": 20},
+              {"level": "150k+", "percent": 20},
+            ];
+
+            var fM = [
+              {"level": "0-25k", "percent": 7},
+              {"level": "25-50k", "percent": 8},
+              {"level": "50-75k", "percent": 18},
+              {"level": "75-100k", "percent": 18},
+              {"level": "100-150k", "percent": 23},
+              {"level": "150k+", "percent": 23},
+            ];
+
+            var mB = [
+              {"level": "0-25k", "percent": 7},
+              {"level": "25-50k", "percent": 11},
+              {"level": "50-75k", "percent": 17},
+              {"level": "75-100k", "percent": 17},
+              {"level": "100-150k", "percent": 23},
+              {"level": "150k+", "percent": 26},
+            ];
+
+            var rM = [
+              {"level": "0-25k", "percent": 19},
+              {"level": "25-50k", "percent": 22},
+              {"level": "50-75k", "percent": 21},
+              {"level": "75-100k", "percent": 13},
+              {"level": "100-150k", "percent": 16},
+              {"level": "150k+", "percent": 9},
+            ];
+
+            var sL = [
+              {"level": "0-25k", "percent": 13},
+              {"level": "25-50k", "percent": 16},
+              {"level": "50-75k", "percent": 19},
+              {"level": "75-100k", "percent": 17},
+              {"level": "100-150k", "percent": 20},
+              {"level": "150k+", "percent": 15},
+            ];
+
+            var oW = [
+              {"level": "0-25k", "percent": 11},
+              {"level": "25-50k", "percent": 13},
+              {"level": "50-75k", "percent": 17},
+              {"level": "75-100k", "percent": 14},
+              {"level": "100-150k", "percent": 19},
+              {"level": "150k+", "percent": 26},
+            ];
+
+            var stations = [rM, bK, tT, sL, fM, oW, eM, xX, dC, mB];
+
+            var label_svg = d3.select("#label")
+                               .append("svg")
+                               .attr("width", w)
+                               .attr("height", 20);
+
+            //Create SVG element
+            var chart_svg = d3.select("#bar_chart")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h);
+      
+                  chart_svg.selectAll("rect")
+                           .data(tT)
+                           .enter()
+                           .append("rect")
+                           .transition()
+                           .duration(1000)
+                           .attr("x", function(d, i) {
+                                return i * (w / tT.length);
+                           })
+                           .attr("y", function(d) {
+                                return h - (d.percent * 4);
+                           })
+                           .attr("width", w / tT.length - barPadding)
+                           .attr("height", function(d) {
+                                return d.percent * 4;
+                           })
+                           .attr("fill", function(d) {
+                                return "rgb(20," + (d.percent * 10)+", 100 )";
+                           });
+
+                        chart_svg.selectAll("text")
+                           .data(tT)
+                           .enter()
+                           .append("text")
+                           .text(function(d) {
+                                return d.level+" "+d.percent+"%";
+                           })
+                           .attr("text-anchor", "middle")
+                           .attr("x", function(d, i) {
+                                return i * (w / tT.length) + (w / tT.length - barPadding) / 2;
+                           })
+                           .attr("y", function(d) {
+                                return h - (d.percent * 4) + 14;
+                           })
+                           .attr("font-family", "sans-serif")
+                           .attr("font-size", "11px")
+                           .attr("fill", "#A77FFF");
+// END BAR CHART //////////////
+
+
+function redraw(chart_data) {
+
+            chart_svg.selectAll("rect")
+               .data(chart_data)
+               .transition()
+               .duration(1500)
+               .attr("x", function(d, i) {
+                    return i * (w / chart_data.length);
+               })
+               .attr("y", function(d) {
+                    return h - (d.percent * 4);
+               })
+               .attr("width", w / chart_data.length - barPadding)
+               .attr("height", function(d) {
+                    return d.percent * 4;
+               })
+               .attr("fill", function(d) {
+                    return "rgb(20," + (d.percent * 10)+", 100 )";
+               });
+
+            chart_svg.selectAll("text")
+               .data(chart_data)
+               .transition()
+               .duration(1500)
+               .text(function(d) {
+                    return d.level+" "+d.percent+"%";
+               })
+               .attr("text-anchor", "middle")
+               .attr("x", function(d, i) {
+                    return i * (w / chart_data.length) + (w / chart_data.length - barPadding) / 2;
+               })
+               .attr("y", function(d) {
+                    return h - (d.percent * 4) + 14;
+               })
+               .attr("font-family", "sans-serif")
+               .attr("font-size", "11px")
+               .attr("fill", "#A77FFF");
+
+}
 
 /* Create OR update a chord layout from a data matrix */
 function updateChords(matrix, labels) {
@@ -260,16 +452,15 @@ function updateChords(matrix, labels) {
     //this is reset on every update, so it will use the latest
     //chordPaths selection
 
-    on_chord = on_chord - 1;
-    console.log(on_chord);
     groupG.on("click", function(d) {
         //chordPaths.classed("fade", function (p) {
             //returns true if *neither* the source or target of the chord
             //matches the group that has been moused-over
             //return ((p.source.index != d.index) && (p.target.index != d.index));
         //});
-    
-    console.log(on_chord);
+
+        redraw(stations[d.index]);
+
         chordPaths.style("opacity", function (p) {if ((p.source.index != d.index) && (p.target.index != d.index)) {
             return 0.15;   
             console.log(p); 
@@ -412,12 +603,11 @@ d3.select("#jan_2008").on("click", function() {
 });
 
 d3.select("#jan_2010").on("click", function() {
-    load_csv( "_data/jan10.csv" );
     disableButton(this);
 });
 
 d3.select("#jan_2013").on("click", function() {
-    load_csv( "_data/jan13.csv" );
+   load_csv( "_data/jan13.csv" );
     disableButton(this);
 });
 
