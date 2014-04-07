@@ -15,8 +15,16 @@ $(document).ready(function() {
         createSvg();
         createChordDiagram();
         setupButton();
+        updateDiagramFromCSV("_data/jan12-limited.csv");
 
-        d3.csv("_data/jan12-limited.csv", function (data) {
+        
+
+    //add onclick button method that triggers data transition
+    // make init function update data
+    }
+
+    function updateDiagramFromCSV(csv) {
+        d3.csv(csv, function (data) {
             getFormattedData(data);
             setChordDiagramData(master_matrix, exits);
 
@@ -24,10 +32,8 @@ $(document).ready(function() {
                 var station = exits[i];
             });    
         });
-
-    //add onclick button method that triggers data transition
-    // make init function update data
     }
+
 
     //create svg item
     function createSvg() {
