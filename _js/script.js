@@ -7,7 +7,8 @@ $(document).ready(function() {
     var outerRadius = null;
     var master_matrix = null;
     var exits = null;
-    
+    var w = window;
+
     initialize();
 
     function initialize() {
@@ -146,7 +147,6 @@ $(document).ready(function() {
             .attr("text-anchor", function (d) {
                 return d.angle > Math.PI ? "end" : "begin";
             });
-    
 
             svg.append("g")
                 .attr("class", "chord")
@@ -173,21 +173,12 @@ $(document).ready(function() {
             
         };
 
-        
-            
-        var w = window;
+    function setupButton() {
+        var button = d3.select("#chord-transition-button")
+        button.on("click", changeChord)
 
-
-                
-        
-
-
-        function setupButton() {
-            var button = d3.select("#chord-transition-button")
-            button.on("click", changeChord)
-
-            function changeChord() {
-                console.log("blah");
-            }
+        function changeChord() {
+            console.log("blah");
         }
-        });
+    }
+});
